@@ -116,8 +116,9 @@ class tkinterz():
         tk.Button(self.ch, text="Enter", command=self.createhuman).pack()
 
     def deletehuman(self):
-        collections.delete_one({"id": int(self.third1.get())})
-        del self.humans[int(self.third1.get())]
+        test = GiveSalary()
+        test.main = list(collections.find({}))[int(self.third1.get()) - 1]
+        collections.delete_one({"names": test.main["names"]})
         self.dh.destroy()
 
     def tk_deletehuman(self):
@@ -135,19 +136,16 @@ class tkinterz():
         test1 = int(self.fourth1.get())
         print(test1)
         print(self.fourth3.get())
-        test2 = self.fourth2.get()
+        test = GiveSalary()
+        test.main = list(collections.find({}))[int(self.fourth1.get()) - 1]
         if self.fourth2.get() == "ФИО":
-            self.humans[test1].main["names"] = self.fourth3.get()
-            collections.update_one(collections.find_one({"id": int(self.fourth1.get())}), {"names": self.fourth3.get()})
+            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"names": self.fourth3.get()}})
         elif self.fourth2.get() == "Должность":
-            self.humans[test1].main["post"] = self.fourth3.get()
-            collections.update_one(collections.find_one({"id": int(self.fourth1.get())}), {"post": self.fourth3.get()})
+            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"post": self.fourth3.get()}})
         elif self.fourth2.get() == "Зарплата":
-            self.humans[test1].main["salary"] = int(self.fourth3.get())
-            collections.update_one(collections.find_one({"id": int(self.fourth1.get())}), {"salary": int(self.fourth3.get())})
+            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"salary": int(self.fourth3.get())}})
         elif self.fourth2.get() == "Процент комиссии":
-            self.humans[test1].main["tax_percent"] = int(self.fourth3.get())
-            collections.update_one(collections.find_one({"id": int(self.fourth1.get())}), {"tax_percent": int(self.fourth3.get())})
+            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"tax_percent": int(self.fourth3.get())}})
         print()
         print()
         self.eh.destroy()
@@ -188,7 +186,9 @@ class tkinterz():
             cm = True
             c_m = int(self.second5.get())
 
-        messagebox.showinfo("WorkJobs", self.humans[int(self.second1.get())].print_check(rw, r_w, cm, c_m))
+        test = GiveSalary()
+        test.main = list(collections.find({}))[int(self.second1.get()) - 1]
+        messagebox.showinfo("WorkJobs", test.print_check(rw, r_w, cm, c_m))
         self.cp.destroy()
 
     def tk_printcheck(self):
@@ -219,7 +219,7 @@ class tkinterz():
 
 if __name__ == '__main__':
     client = pymongo.MongoClient(config.url)
-    database = client["https://github.com/YouHacked0"]
+    database = client["YouHacked0"]
     collections = database["WorkJobs"]
     root = tkinterz()
     root.start()
