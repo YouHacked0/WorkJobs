@@ -67,8 +67,8 @@ class Interface:
         self.root.mainloop()
 
     def createhuman(self):
-        test = GiveSalary()
-        test.create_human(name=self.create_names.get(), post=self.create_post.get(), salary=int(self.create_salary.get()),
+        human = GiveSalary()
+        human.create_human(name=self.create_names.get(), post=self.create_post.get(), salary=int(self.create_salary.get()),
                           tax_percent=int(self.create_tax_percent.get()))
         self.tax_percent = int(self.create_tax_percent.get())
         if self.humans == {}:
@@ -78,7 +78,7 @@ class Interface:
             [i] = coll.deque(self.humans, maxlen=1)
             i = i + 1
             messagebox.showinfo("WorkJobs", f"ID: {coll.deque(self.humans, maxlen=1)}")
-        self.humans[i] = test
+        self.humans[i] = human
         self.ch.destroy()
         pprint(self.humans)
 
@@ -109,9 +109,9 @@ class Interface:
         tk.Button(self.ch, text="Enter", command=self.createhuman).pack()
 
     def deletehuman(self):
-        test = GiveSalary()
-        test.main = list(collections.find({}))[int(self.delete_id.get()) - 1]
-        collections.delete_one({"names": test.main["names"]})
+        human = GiveSalary()
+        human.main = list(collections.find({}))[int(self.delete_id.get()) - 1]
+        collections.delete_one({"names": human.main["names"]})
         self.dh.destroy()
 
     def tk_deletehuman(self):
@@ -126,17 +126,16 @@ class Interface:
         tk.Button(self.dh, text="Enter", command=self.deletehuman).pack()
 
     def edithuman(self):
-        test1 = int(self.edit_id.get())
-        test = GiveSalary()
-        test.main = list(collections.find({}))[int(self.edit_id.get()) - 1]
+        human = GiveSalary()
+        human.main = list(collections.find({}))[int(self.edit_id.get()) - 1]
         if self.edit_type.get() == "ФИО":
-            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"names": self.edit_value.get()}})
+            collections.update_one(collections.find_one({"names": human.main["names"]}), {"$set": {"names": self.edit_value.get()}})
         elif self.edit_type.get() == "Должность":
-            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"post": self.edit_value.get()}})
+            collections.update_one(collections.find_one({"names": human.main["names"]}), {"$set": {"post": self.edit_value.get()}})
         elif self.edit_type.get() == "Зарплата":
-            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"salary": int(self.edit_value.get())}})
+            collections.update_one(collections.find_one({"names": human.main["names"]}), {"$set": {"salary": int(self.edit_value.get())}})
         elif self.edit_type.get() == "Процент комиссии":
-            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"tax_percent": int(self.edit_value.get())}})
+            collections.update_one(collections.find_one({"names": human.main["names"]}), {"$set": {"tax_percent": int(self.edit_value.get())}})
         self.eh.destroy()
 
     def tk_edithuman(self):
@@ -175,9 +174,9 @@ class Interface:
             cm = True
             c_m = int(self.print_compensation.get())
 
-        test = GiveSalary()
-        test.main = list(collections.find({}))[int(self.print_id.get()) - 1]
-        messagebox.showinfo("WorkJobs", test.print_check(rw, c_m))
+        human = GiveSalary()
+        human.main = list(collections.find({}))[int(self.print_id.get()) - 1]
+        messagebox.showinfo("WorkJobs", human.print_check(rw, c_m))
         self.cp.destroy()
 
     def tk_printcheck(self):
