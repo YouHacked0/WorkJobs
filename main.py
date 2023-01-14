@@ -20,9 +20,6 @@ class GiveSalary:
         collections.insert_one(self.main)
         return self.main
 
-    def get_tax(self, summ, percent=13):
-        return summ - (summ / 100 * percent)
-
     def get_reward(self, bol, amount=5000):
         if bol:
             return self.main['salary'] + amount
@@ -35,7 +32,7 @@ class GiveSalary:
         else:
             return 0
 
-    def print_check(self, use_reward=False, reward=5000, use_compensation=False, compensation=0):
+    def print_check(self, reward=5000, compensation=0):
         salary__tax = self.main['salary'] - (self.main['salary'] / 100 * self.main['tax_percent'])
         return (f"""
 ==============================
@@ -51,11 +48,7 @@ class GiveSalary:
 """)
 
 
-def get_tax(summ, percent=13):
-    return summ - (summ / 100 * percent)
-
-
-class tkinterz():
+class Interface:
     def __init__(self):
         self.tax_percent = None
         self.root = tk.Tk()
@@ -75,9 +68,9 @@ class tkinterz():
 
     def createhuman(self):
         test = GiveSalary()
-        test.create_human(name=self.first1.get(), post=self.first2.get(), salary=int(self.first3.get()),
-                          tax_percent=int(self.first4.get()))
-        self.tax_percent = int(self.first4.get())
+        test.create_human(name=self.create_names.get(), post=self.create_post.get(), salary=int(self.create_salary.get()),
+                          tax_percent=int(self.create_tax_percent.get()))
+        self.tax_percent = int(self.create_tax_percent.get())
         if self.humans == {}:
             i = 1
             messagebox.showinfo("WorkJobs", "ID: 1")
@@ -95,29 +88,29 @@ class tkinterz():
 
         tk.Label(self.ch, text="Name", font="Times_New_Roman 10").pack()
 
-        self.first1 = tk.Entry(self.ch, width=15)
-        self.first1.pack()
+        self.create_names = tk.Entry(self.ch, width=15)
+        self.create_names.pack()
 
         tk.Label(self.ch, text="Post", font="Times_New_Roman 10").pack()
 
-        self.first2 = tk.Entry(self.ch, width=15)
-        self.first2.pack()
+        self.create_post = tk.Entry(self.ch, width=15)
+        self.create_post.pack()
 
         tk.Label(self.ch, text="Salary", font="Times_New_Roman 10").pack()
 
-        self.first3 = tk.Entry(self.ch, width=15)
-        self.first3.pack()
+        self.create_salary = tk.Entry(self.ch, width=15)
+        self.create_salary.pack()
 
         tk.Label(self.ch, text="Tax percent", font="Times_New_Roman 10").pack()
 
-        self.first4 = tk.Entry(self.ch, width=15)
-        self.first4.pack()
+        self.create_tax_percent = tk.Entry(self.ch, width=15)
+        self.create_tax_percent.pack()
 
         tk.Button(self.ch, text="Enter", command=self.createhuman).pack()
 
     def deletehuman(self):
         test = GiveSalary()
-        test.main = list(collections.find({}))[int(self.third1.get()) - 1]
+        test.main = list(collections.find({}))[int(self.delete_id.get()) - 1]
         collections.delete_one({"names": test.main["names"]})
         self.dh.destroy()
 
@@ -127,27 +120,23 @@ class tkinterz():
 
         tk.Label(self.dh, text="ID", font="Times_New_Roman 10").pack()
 
-        self.third1 = tk.Entry(self.dh, width=15)
-        self.third1.pack()
+        self.delete_id = tk.Entry(self.dh, width=15)
+        self.delete_id.pack()
 
         tk.Button(self.dh, text="Enter", command=self.deletehuman).pack()
 
     def edithuman(self):
-        test1 = int(self.fourth1.get())
-        print(test1)
-        print(self.fourth3.get())
+        test1 = int(self.edit_id.get())
         test = GiveSalary()
-        test.main = list(collections.find({}))[int(self.fourth1.get()) - 1]
-        if self.fourth2.get() == "ФИО":
-            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"names": self.fourth3.get()}})
-        elif self.fourth2.get() == "Должность":
-            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"post": self.fourth3.get()}})
-        elif self.fourth2.get() == "Зарплата":
-            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"salary": int(self.fourth3.get())}})
-        elif self.fourth2.get() == "Процент комиссии":
-            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"tax_percent": int(self.fourth3.get())}})
-        print()
-        print()
+        test.main = list(collections.find({}))[int(self.edit_id.get()) - 1]
+        if self.edit_type.get() == "ФИО":
+            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"names": self.edit_value.get()}})
+        elif self.edit_type.get() == "Должность":
+            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"post": self.edit_value.get()}})
+        elif self.edit_type.get() == "Зарплата":
+            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"salary": int(self.edit_value.get())}})
+        elif self.edit_type.get() == "Процент комиссии":
+            collections.update_one(collections.find_one({"names": test.main["names"]}), {"$set": {"tax_percent": int(self.edit_value.get())}})
         self.eh.destroy()
 
     def tk_edithuman(self):
@@ -156,39 +145,39 @@ class tkinterz():
 
         tk.Label(self.eh, text="ID", font="Times_New_Roman 10").pack()
 
-        self.fourth1 = tk.Entry(self.eh, width=15)
-        self.fourth1.pack()
+        self.edit_id = tk.Entry(self.eh, width=15)
+        self.edit_id.pack()
 
         tk.Label(self.eh, text="Тип", font="Times_New_Roman 10").pack()
 
-        self.fourth2 = tk.Entry(self.eh, width=15)
-        self.fourth2.pack()
+        self.edit_type = tk.Entry(self.eh, width=15)
+        self.edit_type.pack()
 
         tk.Label(self.eh, text="Значение", font="Times_New_Roman 10").pack()
 
-        self.fourth3 = tk.Entry(self.eh, width=15)
-        self.fourth3.pack()
+        self.edit_value = tk.Entry(self.eh, width=15)
+        self.edit_value.pack()
 
         tk.Button(self.eh, text="Enter", command=self.edithuman).pack()
 
     def printcheck(self):
-        if int(self.second4.get()) == 0:
+        if int(self.print_reward.get()) == 0:
             rw = False
             r_w = 0
         else:
             rw = True
-            r_w = int(self.second4.get())
+            r_w = int(self.print_reward.get())
 
-        if int(self.second5.get()) == 0:
+        if int(self.print_compensation.get()) == 0:
             cm = False
             c_m = 0
         else:
             cm = True
-            c_m = int(self.second5.get())
+            c_m = int(self.print_compensation.get())
 
         test = GiveSalary()
-        test.main = list(collections.find({}))[int(self.second1.get()) - 1]
-        messagebox.showinfo("WorkJobs", test.print_check(rw, r_w, cm, c_m))
+        test.main = list(collections.find({}))[int(self.print_id.get()) - 1]
+        messagebox.showinfo("WorkJobs", test.print_check(rw, c_m))
         self.cp.destroy()
 
     def tk_printcheck(self):
@@ -197,33 +186,25 @@ class tkinterz():
 
         tk.Label(self.cp, text="ID", font="Times_New_Roman 10").pack()
 
-        self.second1 = tk.Entry(self.cp, width=15)
-        self.second1.pack()
+        self.print_id = tk.Entry(self.cp, width=15)
+        self.print_id.pack()
 
         tk.Label(self.cp, text="Reward (to turn off type 0)", font="Times_New_Roman 10").pack()
 
-        self.second4 = tk.Entry(self.cp, width=15)
-        self.second4.pack()
+        self.print_reward = tk.Entry(self.cp, width=15)
+        self.print_reward.pack()
 
         tk.Label(self.cp, text="Compensation (to turn off type 0)", font="Times_New_Roman 10").pack()
 
-        self.second5 = tk.Entry(self.cp, width=15)
-        self.second5.pack()
+        self.print_compensation = tk.Entry(self.cp, width=15)
+        self.print_compensation.pack()
 
         tk.Button(self.cp, text="Enter", command=self.printcheck).pack()
 
-
-# human = GiveSalary()
-# pprint(human.create_human("Леонид Олегович Хомутов", "Охранник", 23_508, human.get_tax(23_508)))
-# human.print_check(use_reward=False, use_compensation=False, compensation=1000)
 
 if __name__ == '__main__':
     client = pymongo.MongoClient(config.url)
     database = client["YouHacked0"]
     collections = database["WorkJobs"]
-    root = tkinterz()
+    root = Interface()
     root.start()
-
-# ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ
-#
-# ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ
